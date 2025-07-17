@@ -89,3 +89,50 @@ if __name__ == '__main__':
     # +--------+------------+-----------+
     # |        |customer_new|       true|
     # +--------+------------+-----------+
+
+
+    ########################################################################################
+    # can we use partition by with saveAsTable method ######################################
+    ########################################################################################
+
+    #!hadoop fs -ls -h data
+    # file has been aaded now
+
+    student_schema = 'student_id Integer,exam_center_id Integer,subject String,year Integer, \
+    quarter Integer,score Integer,grade String'
+
+    customer_df = spark.read.format("csv").schema(student_schema).option('header', True).load("/user/itv020752/data/students.csv")
+    customer_df.show(5)
+# +----------+--------------+-------+----+-------+-----+-----+
+# |student_id|exam_center_id|subject|year|quarter|score|grade|
+# +----------+--------------+-------+----+-------+-----+-----+
+# |         1|             1|   Math|2005|      1|   41|    D|
+# |         1|             1|Spanish|2005|      1|   51|    C|
+# |         1|             1| German|2005|      1|   39|    D|
+# |         1|             1|Physics|2005|      1|   35|    D|
+# |         1|             1|Biology|2005|      1|   53|    C|
+# +----------+--------------+-------+----+-------+-----+-----+
+
+    customer_df.rdd.getNumPartitions()
+# 12 
+# in local machine (gateway node), the size of this file students.csv is 58M
+# in hdfs the size of this file will become 57.4 MB, with RF = 3
+
+    spark.sql("create database itv020752_partitioning")
+
+    customer_df.write.format("csv").mode("overwrite").partitionBy("subject").saveAsTable("itv020752_partitioning.partition_table")
+# our database is in !hadoop fs -ls warehouse/, and our table will get created under
+# !hadoop fs -ls /user/itv020752/warehouse/itv020752_partitioning.db
+# managed table will be created under this location: !hadoop fs -ls /user/itv020752/warehouse/itv020752_partitioning.db
+# but our database location is in: !hadoop fs -ls warehouse/
+
+    spark.sql("select * from itv020752_partitioning.partition_table limit 10").show(1)
+# +----------+--------------+----+-------+-----+-----+-------+
+# |student_id|exam_center_id|year|quarter|score|grade|subject|
+# +----------+--------------+----+-------+-----+-----+-------+
+# |    114080|             5|2010|      2|   89|    A|   Math|
+# +----------+--------------+----+-------+-----+-----+-------+
+
+#!hadoop fs -ls warehouse/itv020752_partitioning.db/partition_table
+# output of this is: 14, spark.sql("select count(distinct Subject) from customer").show()
+# it has a 15 folder, 14 (No of distict values under Subject) + 1 succes files.
