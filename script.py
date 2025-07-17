@@ -79,3 +79,67 @@ if __name__ == '__main__':
 
     #!hadoop fs -ls -h writerOutputData/orc
     # will create a 12 files in this case, with RF = 3, 11 files are having a size of 406 to 418 KB, and 1 files having size of 90KB
+
+
+
+
+
+
+    ###################################
+    ### Additional Informations #######
+
+        # [itv020752@g01 ~]$ hadoop fsck  data/students.csv -files -blocks -locations
+        # WARNING: Use of this script to execute fsck is deprecated.
+        # WARNING: Attempting to execute replacement "hdfs fsck" instead.
+
+        # Connecting to namenode via http://m01.itversity.com:9870/fsck?ugi=itv020752&files=1&blocks=1&locations=1&path=%2Fuser%2Fitv020752%2Fdata%2F
+        # students.csv
+        # FSCK started by itv020752 (auth:SIMPLE) from /172.16.1.101 for path /user/itv020752/data/students.csv at Thu Jul 17 11:27:30 EDT 2025
+
+        # /user/itv020752/data/students.csv 60201900 bytes, replicated: replication=3, 1 block(s):  OK
+        # 0. BP-1685381103-172.16.1.103-1609223169030:blk_1100842491_27121754 len=60201900 Live_repl=3  [DatanodeInfoWithStorage[172.16.1.105:9866,DS
+        # -cd1d8ab0-7d77-4607-98bf-961a7ad81f45,DISK], DatanodeInfoWithStorage[172.16.1.106:9866,DS-b1aa8def-bcd8-4514-8697-29c2f7fd008d,DISK], Datan
+        # odeInfoWithStorage[172.16.1.107:9866,DS-53639da4-6786-42af-a4a6-5021150dddf3,DISK]]
+
+
+        # Status: HEALTHY
+        # Number of data-nodes:  3
+        # Number of racks:               1
+        # Total dirs:                    0
+        # Total symlinks:                0
+
+        # Replicated Blocks:
+        # Total size:    60201900 B
+        # Total files:   1
+        # Total blocks (validated):      1 (avg. block size 60201900 B)
+        # Minimally replicated blocks:   1 (100.0 %)
+        # Over-replicated blocks:        0 (0.0 %)
+        # Under-replicated blocks:       0 (0.0 %)
+        # Mis-replicated blocks:         0 (0.0 %)
+        # Default replication factor:    3
+        # Average block replication:     3.0
+        # Missing blocks:                0
+        # Corrupt blocks:                0
+        # Missing replicas:              0 (0.0 %)
+        # Blocks queued for replication: 0
+
+        # Erasure Coded Block Groups:
+        # Total size:    0 B
+        # Total files:   0
+        # Total block groups (validated):        0
+        # Minimally erasure-coded block groups:  0
+        # Over-erasure-coded block groups:       0
+        # Under-erasure-coded block groups:      0
+        # Unsatisfactory placement block groups: 0
+        # Average block group size:      0.0
+        # Missing block groups:          0
+        # Corrupt block groups:          0
+        # Missing internal blocks:       0
+        # Blocks queued for replication: 0
+        # FSCK ended at Thu Jul 17 11:27:30 EDT 2025 in 1 milliseconds
+
+        # itv020752@g01 ~]$ hadoop fs -du -h data
+        # 348.1 M  1.0 G    data/bigLog.txt
+        # 57.4 M   172.2 M  data/students.csv
+
+        # 60201900B / 1024 /1024 = 57.4 MB
