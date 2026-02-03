@@ -126,6 +126,9 @@ if __name__ == '__main__':
 # managed table will be created under this location: !hadoop fs -ls /user/itv020752/warehouse/itv020752_partitioning.db
 # but our database location is in: !hadoop fs -ls warehouse/
 
+# we can use this as well
+# customer_df.write.format("csv").mode("overwrite").partitionBy("subject").option("path", "/user/itv020752/writerOutputData/csv/patitioning_data").saveAsTable("itv020752_partitioning.partition_table")
+
     spark.sql("select * from itv020752_partitioning.partition_table limit 10").show(1)
 # +----------+--------------+----+-------+-----+-----+-------+
 # |student_id|exam_center_id|year|quarter|score|grade|subject|
