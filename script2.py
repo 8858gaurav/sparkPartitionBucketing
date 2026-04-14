@@ -128,7 +128,7 @@ if __name__ == '__main__':
 
 # we can use this as well
 # customer_df.write.format("csv").mode("overwrite").partitionBy("subject").option("path", "/user/itv020752/writerOutputData/csv/patitioning_data").saveAsTable("itv020752_partitioning.partition_table")
-
+# the above one will become an ext table, if we  use .option(path) method, you can't see the table name under your db location, i.e -> itv020752_partitioning.db, your location of the data will be present inside the path 
     spark.sql("select * from itv020752_partitioning.partition_table limit 10").show(1)
 # +----------+--------------+----+-------+-----+-----+-------+
 # |student_id|exam_center_id|year|quarter|score|grade|subject|
